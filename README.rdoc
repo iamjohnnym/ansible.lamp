@@ -16,10 +16,9 @@ TODO
 
 = LICENSE & AUTHOR:
 
-Original Author:: Phil Eatherington (<phil.eatherington@rackspace.com>)
-Ported From Chef:: https://github.rackspace.com/Blueprints/lamp
-Ansible Author:: Johnny Martin (<john.martin@rackspace.com>)
-Ansible Author:: Rocco Muscaritolo (<rocco.muscaritolo@rackspace.com>)
+Original Author:: Phil Eatherington
+Ansible Author:: Rocco Muscaritolo
+Ansible Author:: Johnny Martin
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
