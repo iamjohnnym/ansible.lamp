@@ -1,0 +1,72 @@
+# LAMP Deployment Vars
+
+playbook: {
+    'php5': {
+        'apache': "apache2",
+        'packages': [
+            "libapache2-mod-php5",
+            "php5-cli",
+            "php-pear",
+            "php5-mysql",
+            "php-apc",
+            "php5-gd",
+            "php5-dev",
+            "php5-curl"
+        ],
+        'php_ini': "/etc/php5/apache2/php.ini",
+        'session': {
+            'save_path': "/var/lib/php5/session"
+        },
+        'max_execution_time': 30,
+        'memory_limit': "{{ansible_memtotal_mb}}",
+        'error_reporting': "E_ALL & ~E_NOTICE | E_DEPRECATED",
+        'register_globals': "Off",
+        'post_max_size': "8M",
+        'upload_max_filesize': "2M",
+        'short_open_tag': "On",
+        'include_path': ".:/usr/share/pear:/usr/share/php",
+        'expose_php': "Off"
+    },
+    'apache2': {
+        'domain': "domain.com",
+        'apache': "apache2",
+        'vhost_directory': "/etc/apache2/sites-available",
+        'owner': "www-data",
+        'group': "www-data",
+        'apache_ports': [
+            80,
+            443
+        ],
+        'open_firewall_ports': [
+            22,
+            80,
+            443
+        ],
+        'apache_modules': [
+            "cgi",
+            "dir",
+            "env",
+            "ssl",
+            "mime",
+            "alias",
+            "status",
+            "deflate",
+            "rewrite",
+            "setenvif",
+            "autoindex",
+            "reqtimeout",
+            "auth_basic",
+            "authn_file",
+            "authz_host",
+            "authz_user",
+            "negotiation",
+            "authz_default",
+            "authz_groupfile"
+        ],
+        'timeout': 30,
+        'keep_alive': "On",
+        'keep_alive_timeout': 20,
+        'keep_alive_requests': 120,
+        'max_clients': "{{ (ansible_memtotal_mb / 2 / 15)|int }}",
+    }
+}

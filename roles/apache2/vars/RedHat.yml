@@ -1,0 +1,5 @@
+---
+apache: httpd
+vhost_directory: /etc/httpd/vhost.d
+owner: apache
+group: apache

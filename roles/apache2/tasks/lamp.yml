@@ -1,0 +1,5 @@
+---
+- name: Enable apache modules for Debian based
+  command: /usr/sbin/a2enmod {{item}}
+  with_items: playbook.apache2.apache_modules
+  when: ansible_os_family == 'Debian'

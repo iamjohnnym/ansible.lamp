@@ -1,0 +1,13 @@
+---
+# Generic Playbook to install and configure apache as an example
+
+- name: Install PHP and packages
+  apt: pkg={{item}} state=installed update_cache=true
+  with_items: playbook.php5.packages
+  when: ansible_os_family == 'Debian'
+
+- name: copy apache2.conf template
+  template: src=php.ini.j2 dest={{playbook.php5.php_ini}}
+  when: ansible_os_family == 'Debian'
+  notify: restart apache
+

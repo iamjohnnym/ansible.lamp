@@ -1,0 +1,21 @@
+---
+# Generic Playbook to install and configure apache as an example
+
+- name: Install apache2 for Debian based
+  apt: pkg=apache2 state=installed update_cache=true
+  when: ansible_os_family == 'Debian'
+
+- name: install httpd for RHEL based
+  yum: pkg=httpd state=installed
+  when: ansible_os_family == 'RedHat'
+
+- name: copy apache2.conf template
+  template: src=apache2.conf.j2 dest=/etc/apache2/apache2.conf
+  when: ansible_os_family == 'Debian'
+
+- name: copy apache2.conf template
+  template: src=ports.conf.j2 dest=/etc/apache2/ports.conf
+  when: ansible_os_family == 'Debian'
+
+- name: Restart apache
+  service: name={{ playbook.apache2.apache }} state=restarted
