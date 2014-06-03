@@ -1,0 +1,77 @@
+---
+- include_vars: "{{ ansible_os_family }}.yml" 
+
+- name: Generate root MySQL password
+  shell: openssl rand -base64 18 | tr -cd '[[:alnum:]]\n'
+  register: root_pass
+
+- name: Setting root password
+  set_fact: mysql_password="{{ root_pass.stdout }}"
+
+- name: Generate replication user password
+  shell: openssl rand -base64 18 | tr -cd '[[:alnum:]]\n'
+  register: repl_pass
+
+- name: Setting replication user password
+  set_fact: repl_password="{{ repl_pass.stdout }}"
+
+- name: Include Debian preseeding task
+  include: preseed.yml
+  when: ansible_os_family == "Debian"
+
+- name: Add include directory 
+  file: path={{ includedir }} owner=root group=root state=directory
+
+- name: Install MySQL packages on Redhat base
+  yum: name=mysql55-server state=latest
+  when: ansible_os_family == 'RedHat'
+
+- name: Install MySQL packages on Ubuntu base
+  apt: name=mysql-server state=present
+  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+
+- name: Add tmp directory
+  file: path=/var/lib/mysqltmp owner=mysql group=mysql state=directory
+
+- name: Add my.cnf template
+  template: src=my.cnf.j2 dest={{mysqlpath}}/my.cnf
+  notify: restart mysql
+
+- name: Remove existing InnoDB log files
+  file: path=/var/lib/mysql/{{item}} state=absent
+  with_items:
+  - ib_logfile0
+  - ib_logfile1
+
+- name: Check for existing grants file.
+  command: test -f {{mysqlpath}}/grants.sql
+  register: grants_found
+  ignore_errors: yes
+
+- name: Add grants template
+  template: src=grants.sql.j2 dest={{mysqlpath}}/grants.sql
+  when: grants_found.rc != 0
+  register: grants_added
+  notify: restart mysql
+
+- name: Start MySQL if grants were added
+  service: name={{mysql}} state=restarted
+  when: grants_added|changed
+
+- name: Configure grants and passwords for RedHat systems
+  shell: /usr/bin/mysql -u root < {{mysqlpath}}/grants.sql
+  when: grants_added|changed and ansible_os_family == "RedHat"
+  notify: restart mysql
+
+- name: Configure grants and passwords for Debian systems
+  shell: /usr/bin/mysql -u root -p'{{mysql_password}}'< {{mysqlpath}}/grants.sql
+  when: grants_added|changed and ansible_os_family == "Debian"
+  notify: restart mysql
+
+- name: Set ~/.my.cnf file
+  template: src=dotmy.cnf.j2 dest=/root/.my.cnf mode=0600
+  when: grants_added|changed
+
+- name: Set mysqllogs logrotate
+  template: src=mysql-logrotate.j2 dest=/etc/logrotate.d/mysqllogs
+

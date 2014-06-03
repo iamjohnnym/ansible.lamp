@@ -1,6 +1,8 @@
 ---
-- hosts: webbed
+- hosts: all
   user: root
   roles:
     - apache2
     - php5
+    - { role: mysql-server, tags: mysql-server }
+
