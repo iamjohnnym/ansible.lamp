@@ -1,3 +1,4 @@
 ---
 
 htuser: serverinfo
+blowfish_pass: "{{ lookup('password') }}"

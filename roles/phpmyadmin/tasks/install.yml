@@ -23,9 +23,23 @@
 - name: Setting password
   set_fact: htpass="{{ ht_passwd.stdout }}"
 
-- name: run htpasswd command
+- name: Run htpasswd command
   shell: htpasswd -b -c /etc/{{phpmyadmin_name}}/phpmyadmin-htpasswd {{htuser}} {{htpass}}
 
-- name: Add .phpmyadmin file
+- name: Adding ~/.phpmyadmin
   template: src=dotphpmyadminpass.j2 dest=/root/.phpmyadminpass
+
+- name: Adding apache.conf
+  template: src={{ansible_distribution}}_apache.conf.j2 dest=/etc/{{phpmyadmin_name}}/apache.conf
+  notify: restart apache
+
+- name: Adding config.inc.php 
+  template: src={{ansible_distribution}}_config.inc.php.j2 dest=/etc/{{phpmyadmin_name}}/config.inc.php
+  notify: restart apache
+
+- name: Symlink for apache.conf
+  file: src=/etc/{{phpmyadmin_name}}/apache.conf dest={{apache_path}}/{{phpmyadmin_name}}.conf state=link
+
+
+
 
