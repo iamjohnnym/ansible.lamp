@@ -1,4 +1,7 @@
 ---
+
+debian_password: "{{ lookup('password', '/tmp/deb_passwd') }}"
+
 mysql: mysql
 mysqlpath: /etc/mysql
 socket: /var/run/mysqld/mysqld.sock

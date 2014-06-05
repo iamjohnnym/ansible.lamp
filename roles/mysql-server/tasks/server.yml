@@ -1,20 +1,6 @@
 ---
 - include_vars: "{{ ansible_os_family }}.yml" 
 
-- name: Generate root MySQL password
-  shell: openssl rand -base64 18 | tr -cd '[[:alnum:]]\n'
-  register: root_pass
-
-- name: Setting root password
-  set_fact: mysql_password="{{ root_pass.stdout }}"
-
-- name: Generate replication user password
-  shell: openssl rand -base64 18 | tr -cd '[[:alnum:]]\n'
-  register: repl_pass
-
-- name: Setting replication user password
-  set_fact: repl_password="{{ repl_pass.stdout }}"
-
 - name: Include Debian preseeding task
   include: preseed.yml
   when: ansible_os_family == "Debian"
