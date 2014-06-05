@@ -5,23 +5,16 @@
 - name: Install PMA for Debian systems
   apt: name={{item}} state=latest update_cache=true
   with_items:
-  - {{phpmyadmin_name}}
+  - "{{phpmyadmin_name}}"
   - apache2-utils
   when: ansible_os_family == 'Debian'
 
 - name: Install PMA for Redhat systems
   yum: name={{item}} state=latest
   with_items:
-  - {{phpmyadmin_name}}
+  - "{{phpmyadmin_name}}"
   - httpd-tools
   when: ansible_os_family == 'RedHat'
-
-- name: Generate htpasswd
-  shell: openssl rand -base64 18 | tr -cd '[[:alnum:]]\n'
-  register: ht_passwd
-
-- name: Setting password
-  set_fact: htpass="{{ ht_passwd.stdout }}"
 
 - name: Run htpasswd command
   shell: htpasswd -b -c /etc/{{phpmyadmin_name}}/phpmyadmin-htpasswd {{htuser}} {{htpass}}

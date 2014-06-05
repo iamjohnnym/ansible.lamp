@@ -67,6 +67,15 @@ playbook: {
         'keep_alive': "On",
         'keep_alive_timeout': 20,
         'keep_alive_requests': 120,
-        'max_clients': "{{ (ansible_memtotal_mb / 2 / 15)|int }}",
+        'max_clients': "{{ (ansible_memtotal_mb / 2 / 15)|int }}"
+    },
+    'phpmyadmin': {
+        'whitelistips_support': [
+            "72.3.128.84/32", #DFW Bastion
+            "69.20.0.1/32", #IAD Bastion
+            "120.136.34.22/32", #HKG Bastion
+            "212.100.225.49/32", #LON1 Bastion
+            "212.100.225.42/32" #LON3 Bastion
+        ]
     }
 }
