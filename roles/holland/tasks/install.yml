@@ -1,0 +1,22 @@
+---
+#- include_vars: "{{ ansible_os_family }}.yml"
+
+- name: Install holland pkgs on Redhat base
+  yum: name={{item}} state=present
+  with_items:
+  - python-setuptools
+  - holland
+  when: ansible_os_family == 'RedHat'
+
+- name: Install holland pgs on Debian base
+  apt: name=python-support state=present
+  when: ansible_os_family == 'Debian'
+  register: deb_install
+
+- name: Download .deb files for local install.
+  copy: src=holland_{{holland_version}}_all.deb dest=
+  when: ansible_os_family == 'Debian' and deb_install|changed
+
+
+
+
