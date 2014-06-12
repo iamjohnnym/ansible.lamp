@@ -6,3 +6,4 @@
     - php5
     - { role: mysql-server, tags: mysql-server }
     - { role: phpmyadmin, tags: phpmyadmin }
+    - { role: holland, tags: holland }
