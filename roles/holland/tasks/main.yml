@@ -1,5 +1,5 @@
 ---
 
 
-include: install.yml
+include: default.yml
 
