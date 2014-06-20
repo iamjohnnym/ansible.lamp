@@ -1,4 +1,8 @@
 ---
+- name: Include repos.yml
+  include: repos.yml
+  when: ansible_os_family == 'RedHat'
+
 - name: Determine if general mysql packages exist on Redhat system base
   command: /bin/rpm -q mysql-libs
   when: ansible_os_family == 'RedHat'
