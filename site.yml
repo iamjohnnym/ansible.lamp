@@ -4,6 +4,6 @@
   roles:
     - apache2
     - php5
-    - { role: mysql-server, tags: mysql-server }
+    - { role: mysql, tags: mysql }
     - { role: phpmyadmin, tags: phpmyadmin }
     - { role: holland, tags: holland }

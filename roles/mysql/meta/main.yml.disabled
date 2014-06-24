@@ -1,5 +1,0 @@
----
-# Defining dependices
-
-dependencies:
- - { role: mysql-client }
