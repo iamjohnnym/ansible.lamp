@@ -1,20 +1,22 @@
 ---
 - include_vars: "{{ ansible_os_family }}.yml" 
 
-- name: Include Debian preseeding task
-  include: preseed.yml
-  when: ansible_os_family == "Debian"
-
 - name: Add include directory 
   file: path={{ includedir }} owner=root group=root state=directory
 
 - name: Install MySQL packages on Redhat base
-  yum: name=mysql55-server state=latest
+  yum: name={{item}} state=latest
+  with_items:
+    - mysql55-server
+    - MySQL-python
   when: ansible_os_family == 'RedHat'
 
 - name: Install MySQL packages on Ubuntu base
-  apt: name=mysql-server state=present
-  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+  apt: name={{item}} state=present
+  with_items:
+    - mysql-server
+    - python-mysqldb
+  when: ansible_os_family == 'Debian'
 
 - name: Add tmp directory
   file: path=/var/lib/mysqltmp owner=mysql group=mysql state=directory
@@ -29,34 +31,31 @@
   - ib_logfile0
   - ib_logfile1
 
-- name: Check for existing grants file.
-  command: test -f {{mysqlpath}}/grants.sql
-  register: grants_found
-  ignore_errors: yes
+- name: Manually start service for Redhat base
+  service: name=mysqld state=started
+  when: ansible_os_family == 'RedHat'
 
-- name: Add grants template
-  template: src=grants.sql.j2 dest={{mysqlpath}}/grants.sql
-  when: grants_found.rc != 0
-  register: grants_added
-  notify: restart mysql
-
-- name: Start MySQL if grants were added
-  service: name={{mysql}} state=restarted
-  when: grants_added|changed
-
-- name: Configure grants and passwords for RedHat systems
-  shell: /usr/bin/mysql -u root < {{mysqlpath}}/grants.sql
-  when: grants_added|changed and ansible_os_family == "RedHat"
-  notify: restart mysql
-
-- name: Configure grants and passwords for Debian systems
-  shell: /usr/bin/mysql -u root -p'{{mysql_password}}'< {{mysqlpath}}/grants.sql
-  when: grants_added|changed and ansible_os_family == "Debian"
-  notify: restart mysql
+- name: Update mysql root password
+  mysql_user: name=root host={{item}} password={{mysql_password}}
+  with_items:
+    - 127.0.0.1
+    - ::1
+    - localhost
 
 - name: Set ~/.my.cnf file
   template: src=dotmy.cnf.j2 dest=/root/.my.cnf mode=0600
-  when: grants_added|changed
+
+- name: Delete anonymous MySQL user
+  mysql_user: name="" host={{item}} state=absent
+  with_items:
+    - localhost
+    - "{{ansible_hostname}}"
+
+- name: Delete Hostname based MySQL user
+  mysql_user: name=root host="{{ansible_hostname}}" state=absent
+
+- name: Remove MySQL test database
+  mysql_db: name=test state=absent
 
 - name: Set mysqllogs logrotate
   template: src=mysql-logrotate.j2 dest=/etc/logrotate.d/mysqllogs
