@@ -11,11 +11,21 @@
 
 - name: copy apache2.conf template
   template: src=apache2.conf.j2 dest=/etc/apache2/apache2.conf
-  when: ansible_os_family == 'Debian'
+  when: ansible_os_family == 'Debian' and ansible_lsb.release == '12.04'
 
-- name: copy apache2.conf template
+- name: copy apache24.conf template
+  template: src=apache24.conf.j2 dest=/etc/apache2/apache2.conf
+  when: ansible_os_family == 'Debian' and ansible_lsb.release == '14.04'
+
+- name: copy ports.conf template
   template: src=ports.conf.j2 dest=/etc/apache2/ports.conf
   when: ansible_os_family == 'Debian'
 
-- name: Restart apache
-  service: name={{ playbook.apache2.apache }} state=restarted
+- name: create conf.d directory
+  file: path=/etc/apache2/conf.d owner=root group=root mode=0755 state=directory
+  when: ansible_os_family == 'Debian'
+
+- include: lamp.yml
+
+#- name: Restart apache
+#  service: name={{ playbook.apache2.apache }} state=restarted

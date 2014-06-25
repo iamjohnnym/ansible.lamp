@@ -1,5 +1,16 @@
 ---
+- name: unlink modules
+  command:  /usr/sbin/a2dismod {{ item }}
+  with_items:
+    - "mpm_*"
+
 - name: Enable apache modules for Debian based
-  command: /usr/sbin/a2enmod {{item}}
-  with_items: playbook.apache2.apache_modules
-  when: ansible_os_family == 'Debian'
+  command: /usr/sbin/a2enmod {{ item }}
+  with_items: playbook.apache2.apache_modules.v22
+  when: ansible_os_family == 'Debian' and ansible_lsb.release == '12.04'
+
+- name: Enable apache modules for Debian based
+  command: /usr/sbin/a2enmod {{ item }}
+  with_items: playbook.apache2.apache_modules.v247
+  when: ansible_os_family == 'Debian' and ansible_lsb.release == '14.04'
+  notify: restart apache
