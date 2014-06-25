@@ -6,7 +6,11 @@
   with_items: playbook.php5.packages
   when: ansible_os_family == 'Debian'
 
-- name: copy apache2.conf template
+- name: create session path
+  file: path={{ playbook.php5.session.save_path }} owner=root group=www-data mode=0770 state=directory
+  when: ansible_os_family == 'Debian'
+
+- name: copy php.ini template
   template: src=php.ini.j2 dest={{playbook.php5.php_ini}}
   when: ansible_os_family == 'Debian'
   notify: restart apache
