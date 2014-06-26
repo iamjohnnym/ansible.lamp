@@ -1,13 +1,10 @@
 ---
 - name: Setup default apache firewall rules - RedHat
-  command: "/sbin/iptables -I INPUT 1 -p tcp -m tcp -m comment --comment '{{item.type}}' --dport {{item.port}} -j ACCEPT"
-  with_items:
-   - {'type':'SSH', 'port':22}
-   - {'type':'HTTP', 'port':80}
-   - {'type':'HTTPS', 'port':443}
+  command: "/sbin/iptables -I INPUT 1 -p tcp --dport {{ item.port }} -j ACCEPT"
+  with_items: playbook.apache.common.open_firewall_ports
   when: ansible_os_family == 'RedHat'
 
 - name: Setup default apache firewall rules - Debian
   command: ufw allow {{ item }}
-  with_items: playbook.apache2.open_firewall_ports
+  with_items: playbook.apache.common.open_firewall_ports
   when: ansible_os_family == 'Debian'

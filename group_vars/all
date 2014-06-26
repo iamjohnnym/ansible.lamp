@@ -26,24 +26,55 @@ playbook: {
         'short_open_tag': "On",
         'include_path': ".:/usr/share/pear:/usr/share/php",
         'expose_php': "Off"
-    },
-    'apache2': {
+        },
+    'httpd': {
         'domain': "domain.com",
         'apache': "apache2",
-        'vhost_directory': "/etc/apache2/sites-available",
-        'owner': "www-data",
-        'group': "www-data",
+        'vhost_directory': "/etc/httpd/vhost.d",
+        'owner': "apache",
+        'group': "apache",
         'apache_ports': [
             80,
             443
-        ],
+            ],
         'open_firewall_ports': [
             22,
             80,
             443
-        ],
-        'apache_modules': {
-            'v22': [
+            ],
+        },
+    'apache': {
+        'common': {
+            'domain': "domain.com",
+            'timeout': 30,
+            'keep_alive': "On",
+            'keep_alive_timeout': 20,
+            'keep_alive_requests': 120,
+            'max_clients': "{{ (ansible_memtotal_mb / 2 / 15)|int }}",
+            'active_ports': [
+                80,
+                443
+                ],
+            'open_firewall_ports': [
+                22,
+                80,
+                443
+                ],
+            },
+        "RedHat": {
+            'apache': "httpd",
+            'vhost_directory': "/etc/httpd/vhost.d",
+            'owner': "apache",
+            'group': "apache",
+            },
+        "Debian": {
+            'apache': "apache2",
+            'vhost_directory': "/etc/apache2/sites-available",
+            'owner': "www-data",
+            'group': "www-data",
+            },
+        'modules': {
+            'v2_2': [
                 "cgi",
                 "dir",
                 "env",
@@ -64,7 +95,7 @@ playbook: {
                 "authz_default",
                 "authz_groupfile"
                 ],
-            'v247': [
+            'v2_4_7': [
                 "access_compat",
                 "alias",
                 "auth_basic",
@@ -88,25 +119,22 @@ playbook: {
                 "ssl",
                 "status",
                 ],
-            "v247_conf": [
-                "alias",
-                "autoindex",
-                "deflate",
-                "dir",
-                "mime",
-                "mpm_prefork",
-                "negotiation",
-                "php5",
-                "setenvif",
-                "ssl",
-                "status"
-                ]
-        },
-        'timeout': 30,
-        'keep_alive': "On",
-        'keep_alive_timeout': 20,
-        'keep_alive_requests': 120,
-        'max_clients': "{{ (ansible_memtotal_mb / 2 / 15)|int }}"
+            "module_configs": {
+                "v2_4_7": [
+                    "alias",
+                    "autoindex",
+                    "deflate",
+                    "dir",
+                    "mime",
+                    "mpm_prefork",
+                    "negotiation",
+                    "php5",
+                    "setenvif",
+                    "ssl",
+                    "status"
+                    ]
+                }
+            },
     },
     'phpmyadmin': {
         'whitelistips_support': [
