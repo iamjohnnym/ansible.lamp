@@ -27,22 +27,6 @@ playbook: {
         'include_path': ".:/usr/share/pear:/usr/share/php",
         'expose_php': "Off"
         },
-    'httpd': {
-        'domain': "domain.com",
-        'apache': "apache2",
-        'vhost_directory': "/etc/httpd/vhost.d",
-        'owner': "apache",
-        'group': "apache",
-        'apache_ports': [
-            80,
-            443
-            ],
-        'open_firewall_ports': [
-            22,
-            80,
-            443
-            ],
-        },
     'apache': {
         'common': {
             'domain': "domain.com",

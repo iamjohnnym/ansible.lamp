@@ -15,7 +15,7 @@
   notify: Restart apache
 
 - name: Create domains document root
-  file: path=/var/www/vhosts/{{ playbook.apache.RedHat.domain }} owner={{ playbook.apache.RedHat.owner }} group={{ playbook.apache.RedHat.group }} mode=0775 state=directory
+  file: path=/var/www/vhosts/{{ playbook.apache.common.domain }} owner={{ playbook.apache.RedHat.owner }} group={{ playbook.apache.RedHat.group }} mode=0775 state=directory
   when: ansible_os_family == 'RedHat'
 
 - name: Add domains hostname file
