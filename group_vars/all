@@ -63,7 +63,7 @@ playbook: {
                 "negotiation",
                 "authz_default",
                 "authz_groupfile"
-            ],
+                ],
             'v247': [
                 "access_compat",
                 "alias",
@@ -86,8 +86,21 @@ playbook: {
                 "setenvif",
                 "socache_shmcb",
                 "ssl",
+                "status",
+                ],
+            "v247_conf": [
+                "alias",
+                "autoindex",
+                "deflate",
+                "dir",
+                "mime",
+                "mpm_prefork",
+                "negotiation",
+                "php5",
+                "setenvif",
+                "ssl",
                 "status"
-            ]
+                ]
         },
         'timeout': 30,
         'keep_alive': "On",
