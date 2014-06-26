@@ -1,3 +1,8 @@
 ---
 - name: restart apache
-  service: name={{ playbook.php5.apache }} state=restarted
+  service: name={{ playbook.php5.Debian.apache }} state=restarted
+  when: ansible_os_family == 'Debian'
+
+- name: restart apache
+  service: name={{ playbook.php5.RedHat.apache }} state=restarted
+  when: ansible_os_family == 'RedHat'
