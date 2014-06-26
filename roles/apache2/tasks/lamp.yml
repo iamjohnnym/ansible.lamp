@@ -3,6 +3,7 @@
   command:  /usr/sbin/a2dismod {{ item }}
   with_items:
     - "mpm_*"
+  when: ansible_os_family == 'Debian' and ansible_lsb.release == '14.04'
 
 - name: copy module configuration templates
   template: src=apache24/mods/{{ item }}.conf.j2 dest=/etc/apache2/mods-available/{{ item }}.conf owner=root group=root
