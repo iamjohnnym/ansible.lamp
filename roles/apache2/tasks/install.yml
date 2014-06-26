@@ -11,7 +11,7 @@
 
 - name: copy apache2.conf template
   template: src=apache22/apache2.conf.j2 dest=/etc/apache2/apache2.conf
-  when: ansible_os_family == 'Debian' and ansible_lsb.release == '12.04'
+  when: ansible_os_family == 'Debian' and ansible_lsb.release == '12.04' or ansible_lsb.major_release == '7'
 
 - name: copy apache24.conf template
   template: src=apache24/apache2.conf.j2 dest=/etc/apache2/apache2.conf
