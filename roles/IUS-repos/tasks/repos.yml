@@ -28,13 +28,13 @@
 
 - name: Add ius-dev.repo
   template: src={{ansible_distribution}}_ius-dev.repo.j2 dest=/etc/yum.repos.d/ius.repo
-  when: ansible_os_family == 'RedHat' and rpm_found.rc != 0
+  when: ansible_os_family == 'RedHat'
 
 - name: Add ius.repo
   template: src={{ansible_distribution}}_ius.repo.j2 dest=/etc/yum.repos.d/ius.repo
-  when: ansible_os_family == 'RedHat' and rpm_found.rc != 0
+  when: ansible_os_family == 'RedHat'
 
 - name: Add ius-testing.repo
   template: src={{ansible_distribution}}_ius-testing.repo.j2 dest=/etc/yum.repos.d/ius-testing.repo
-  when: ansible_os_family == 'RedHat' and rpm_found.rc != 0
+  when: ansible_os_family == 'RedHat' 
 
