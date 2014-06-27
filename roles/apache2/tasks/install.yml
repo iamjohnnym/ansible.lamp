@@ -3,7 +3,14 @@
 #
 
 - name: install httpd for RHEL based
-  yum: pkg=httpd state=installed
+  yum: pkg={{ item }} state=installed
+  with_items:
+  - httpd
+  - redhat-lsb
+  when: ansible_os_family == 'RedHat'
+
+- name: regather facts
+  setup:
   when: ansible_os_family == 'RedHat'
 
 - name: copy httpd template - 6.x
