@@ -2,6 +2,7 @@
 - hosts: all
   user: root
   roles:
+    - { role: IUS-repos, tags: ius-repos }
     - apache2
     - php5
     - { role: mysql, tags: mysql }
