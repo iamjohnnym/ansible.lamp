@@ -13,7 +13,7 @@
 - name: copy php.ini template - Debian
   template: src=php.ini.j2 dest={{ playbook.php5.Debian.php_ini }}
   when: ansible_os_family == 'Debian'
-  notify: restart apache
+  notify: restart Debian apache
 
 - name: Install PHP and packages - RHEL
   yum: pkg={{ item }} state=installed
@@ -27,5 +27,5 @@
 - name: copy php.ini template - RHEL
   template: src=php.ini.j2 dest={{ playbook.php5.RedHat.php_ini }}
   when: ansible_os_family == 'RedHat'
-  notify: restart apache
+  notify: restart RedHat apache
 
