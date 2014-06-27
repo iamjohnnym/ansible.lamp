@@ -43,9 +43,9 @@ This is used to deploy a LAMP stack
 
 ## LICENSE & AUTHOR:
 
-Original Author:: **Phil Eatherington**
-Ansible Author:: **Rocco Muscaritolo**
-Ansible Author:: **Johnny Martin**
+Original Author: **Phil Eatherington**
+Ansible Author: **Rocco Muscaritolo**
+Ansible Autho: **Johnny Martin**
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
