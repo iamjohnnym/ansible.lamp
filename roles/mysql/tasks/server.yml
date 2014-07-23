@@ -1,8 +1,7 @@
 ---
-- include_vars: "{{ ansible_os_family }}.yml" 
 
 - name: Add include directory 
-  file: path={{ includedir }} owner=root group=root state=directory
+  file: path={{ playbook.mysql[ansible_os_family].includedir }} owner=root group=root state=directory
 
 - name: Install MySQL packages on Redhat base
   yum: name={{item}} state=latest
@@ -23,7 +22,7 @@
   file: path=/var/lib/mysqltmp owner=mysql group=mysql state=directory
 
 - name: Add my.cnf template
-  template: src=my.cnf.j2 dest={{mysqlpath}}/my.cnf
+  template: src=my.cnf.j2 dest={{playbook.mysql[ansible_os_family].mysqlpath}}/my.cnf
   notify: restart mysql
 
 - name: Remove existing InnoDB log files
@@ -37,7 +36,7 @@
   when: ansible_os_family == 'RedHat'
 
 - name: Update mysql root password
-  mysql_user: name=root host={{item}} password={{mysql_password}}
+  mysql_user: name=root host={{item}} password={{playbook.mysql.mysql_password}}
   with_items:
     - 127.0.0.1
     - ::1
